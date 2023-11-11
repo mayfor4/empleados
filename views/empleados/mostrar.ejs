@@ -1,0 +1,44 @@
+<%- include("../templates/encabezado") %>
+<%- include("../templates/menu") %>
+<div class="container">
+    <div class="card mt-5">
+        <div class="card-header">
+            <h1>Empleados</h1>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Puesto</th>
+                        <th>Password</th>
+                        <th>Foto</th>
+                        <th>Editar/Borrar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%
+                    employees.forEach((empleado, i) => {
+                    %>
+                    <tr>
+                        <td><%= i+1 %></td>
+                        <td><%= empleado.nombre %></td>
+                        <td><%= empleado.puesto %></td>
+                        <td>*****</td>
+                        <td><img src="/images/<%= empleado.foto %>" width="100px" alt=""></td>
+                        <td>
+                            <a href="/editarEmpleado/<%= empleado.id %>">Editar</a>
+                            <a href="/borrarEmpleado/<%= empleado.id %>">Borrar</a>
+                        </td>
+                    </tr>
+                    <%
+                    });
+                    %>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+</div>
+<%- include("../templates/pie") %>

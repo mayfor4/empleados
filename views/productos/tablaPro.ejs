@@ -1,0 +1,73 @@
+<%- include("../templates/encabezado.ejs") %>
+<%- include("../templates/menu.ejs") %>
+
+<div class="container">
+    <div class="card mt-5">
+        <div class="card-header">
+            <h1>Productos</h1>
+        </div>
+    
+        <div class="card-body"></div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th><%- include("../templates/encabezado.ejs") %>
+                    <%- include("../templates/menu.ejs") %>
+                    <div class="container">
+                        <form action="/nuevoProducto" method="post" enctype="multipart/form-data">
+                            <div class="card mt-5">  
+                                <div class="card-header">
+                                    <h1>Nuevo Producto</h1>
+                                </div>
+                                <div class="card-body">
+                                    <input class="form-control mb-3" type="text" name="nombre" id="nombre" placeholder="Nombre" autofocus>
+                                    <input class="form-control mb-3" type="text" name="marca" id="marca" placeholder="Marca">
+                                    <input class="form-control mb-3" type="text" name="modelo" id="modelo" placeholder="Modelo">
+                                    <input class="form-control mb-3" type="text" name="anio" id="anio" placeholder="Año">
+                                    <input class="form-control mb-3" type="text" name="precio" id="precio" placeholder="Precio">
+                                    <input class="form-control mb-3" type="text" name="categoria" id="categoria" placeholder="Categoría">
+                                    <input class="form-control mb-3" type="file" name="foto" id="foto">
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-success form-control">Guardar Producto</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <%- include("../templates/pie.ejs") %>
+                    
+                    <th>Nombre</th>
+                    <th>Categoria</th>
+                    <th>Precio</th>
+                    <th>Editar/Borrar</th>
+                </tr>
+               
+    
+            </thead>
+            <tbody>
+                <%
+                products.forEach((producto)=>{
+                %>
+                    <tr>
+                        <td><%= producto.id %></td>
+                        <td><%= producto.nombre %></td>
+                        <td><%= producto.categoria %></td>
+                        <td><%= producto.precio%></td>
+                        <td>
+                                <a href="/editarProducto/<%= producto.id %>">Editar</a>
+                                <a href="/borrarProducto/<%= producto.id %>">Borrar</a>
+                        </td>
+                    </tr>
+                <%
+                });
+                %>
+    
+            </tbody>
+        </table>
+        
+        <div class="card-footer"></div>
+    </div>
+</div>
+
+
+<%- include("../templates/pie.ejs") %>

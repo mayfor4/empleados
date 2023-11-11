@@ -1,0 +1,29 @@
+<%- include("../templates/encabezado") %>
+<%- include("../templates/menu") %>
+<div class="container mt-5">
+    <form action="/editarEmpleado" method="post" enctype="multipart/form-data">
+        <div class="card">
+            <div class="card-header">
+                <h1>MODIFICAR EMPLEADO</h1>
+            </div>
+            <div class="card-body">
+                <input type="hidden" name="id" id="id" value="<%= employee.id %>">
+                <input type="hidden" name="passwordAnterior" id="passwordAnterior" value="<%= employee.password %>">
+                <input type="hidden" name="salt" id="salt" value="<%= employee.salt %>">
+                <input type="hidden" name="foto" id="foto" value="<%=employee.foto %>">
+                <input type="hidden" name="fotoVieja" id="fotoVieja" value="<%=employee.foto %>">
+
+                <input class="form-control mb-3" value="<%= employee.nombre %>" type="text" name="nombre" id="nombre" placeholder="Nombre" autofocus>
+                <input class="form-control mb-3" value="<%= employee.usuario %>" type="text" name="puesto" id="puesto" placeholder="Puesto">
+                <input class="form-control mb-3" value="" type="password" name="password" id="password" placeholder="Ingrese nueva contraseña si desea reemplazarla">
+
+                <input class="form-control mb-3" type="file" name="foto" id="foto">
+
+            </div>
+            <div class="card-footer">
+                <button class="form-control btn btn-primary">Modificar Empleado</button>
+            </div>
+        </div>
+    </form>
+</div>
+<%- include("../templates/pie") %>
