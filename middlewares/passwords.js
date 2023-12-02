@@ -17,9 +17,29 @@ function validarPassword(password,salt, hash){
 }
 
 //var{salt,hash} = generarPassword("aldoxito");
+function empleado(req, res, siguiente){
+    if(req.session.empleado || req.session.admin){
+        siguiente();
+    }
+    else{
+        res.redirect("/login");
+    }
+}
 
+function admin(req, res, siguiente){
+    console.log("administrador");
+    console.log(req.session.admin);
+    if(req.session.admin){
+        siguiente();
+    }
+    else{
+        res.redirect("/login")
+    }
+}
 
 module.exports={
     generarPassword,
-    validarPassword
+    validarPassword,
+    empleado,
+    admin
 }

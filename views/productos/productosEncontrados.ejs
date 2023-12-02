@@ -1,0 +1,44 @@
+<%- include("../templates/encabezado.ejs") %>
+<%- include("../templates/menu.ejs") %>
+
+<div class="container">
+    <div class="card mt-5">
+        <div class="card-header">
+            <h1>Productos Encontrados</h1>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <!-- Agrega cualquier otro encabezado necesario -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (searchResult) { %>
+                        <tr>
+                            <td><%= searchResult.id %></td>
+                            <td><%= searchResult.nombre %></td>
+                           
+                            <td><%= searchResult.marca %></td>
+                            <td><%= searchResult.modelo %></td>
+                            
+                            <!-- Agrega cualquier otro dato necesario -->
+                        </tr>
+                    <% } else { %>
+                        <!-- Manejar el caso en que no se encuentra ningún resultado -->
+                        <tr>
+                            <td colspan="4"><%= error || "No se encontraron resultados." %></td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+</div>
+
+<%- include("../templates/pie.ejs") %>

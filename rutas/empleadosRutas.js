@@ -2,7 +2,8 @@ var ruta = require("express").Router();
 var path = require("path");
 var fs = require("fs");
 var subirArchivo = require("../middlewares/middlewares").subirArchivo;
-var {mostrarEmpleados, nuevoEmpleado, buscarPorId, modificarEmpleado, borrarEmpleado, login} = require("../bd/empleadosBD");
+var {empleado, admin} =require("../middlewares/passwords");
+var {mostrarEmpleados, nuevoEmpleado, buscarPorId, modificarEmpleado, borrarEmpleado, login,buscarNombre} = require("../bd/empleadosBD");
 
 ruta.get("/login", (req, res) => {
     res.render("empleados/login");
@@ -12,23 +13,32 @@ ruta.post("/login", async (req, res) => {
     var employee = await login(req.body);
     if (employee == undefined) {
         res.redirect("/login");
-    } else {
+    } 
+    else {
         if (employee.admin) {
-            console.log("Admin");
-            res.redirect("/nuevoProducto");
-        } else {
-            console.log("Empleado");
+            //console.log("Admin");
+            req.session.admin=req.body.empleado;
+            res.redirect("/nuevoPro");
+        } 
+        else {
+            //console.log("Empleado");
+            req.session.empleado=req.body.empleado;
             res.redirect("/");
         }
     }
 });
+
+ruta.get("/logout",(req, res)=>{
+    req.session=null;
+    res.redirect("/login");
+})
 
 ruta.get("/", async (req, res) => {
     var employees = await mostrarEmpleados();
     res.render("empleados/mostrar", {employees});
 });
 
-ruta.get("/nuevoEmpleado", (req, res) => {
+ruta.get("/nuevoEmpleado",async (req, res) => {
     res.render("empleados/nuevo");
 });
 
@@ -38,22 +48,24 @@ ruta.post("/nuevoEmpleado", subirArchivo(), async (req, res) => {
     res.redirect("/");
 });
 
-ruta.get("/editarEmpleado/:id", async (req, res) => {
-    const employee = await buscarPorId(req.params.id);
+ruta.get("/editar/:id", async (req, res) => {
+    var employee = await buscarPorId(req.params.id);
     res.render('empleados/modificar', {employee});
 });
 
-ruta.post("/editarEmpleado", subirArchivo(), async (req, res) => {
+
+ruta.post("/editar", subirArchivo(), async (req, res) => {
     if (req.file != undefined) {
         req.body.foto = req.file.originalname;
-    } else {
+    } 
+    else {
         req.body.foto = req.body.fotoVieja;
     }
     var error = await modificarEmpleado(req.body);
     res.redirect("/");
 });
 
-ruta.get("/borrarEmpleado/:id", async (req, res) => {
+ruta.get("/borrar/:id", async (req, res) => {
     try {
         var employee = await buscarPorId(req.params.id);
         if (employee) {
@@ -68,6 +80,60 @@ ruta.get("/borrarEmpleado/:id", async (req, res) => {
         console.error("Error al borrar empleado:", error);
     }
 });
+
+/*ruta.get("/borrar/:id", async(req,res)=>{
+    await borrarEmpleado(req.params.id);
+    res.redirect("/");
+});*/
+
+
+
+
+////////////////////////////////////////////empleados buscar
+ruta.get("/buscarEmpleado", async (req, res) => {
+    try {
+        const empleado= req.body.empleado;
+        const searchResult = await buscarNombre(empleado);
+
+        if (searchResult) {
+            res.render("empleados/mostrar", { searchResult });
+        } else {
+            res.render("empleados/mostrar", { error: "Empleado no encontrado" });
+        }
+    } catch (error) {
+        console.error("Error al buscar empleado:", error);
+        res.status(500).send("Error interno del servidor");
+    }
+});
+
+ruta.post("/buscarEmpleado", async (req, res) => {
+    try {
+        const empleado = req.body.empleado;  // Utiliza req.body en lugar de req.query
+        const searchResult = await buscarNombre(empleado);
+
+        if (searchResult) {
+            // Renderiza la plantilla de usuarios encontrados
+            res.render("empleados/empleadosEncontrados", { searchResult });
+        } else {
+            res.render("empleados/empleadosEncontrados", { error: "Empleado no encontrado" });
+        }
+    } catch (error) {
+        console.error("Error al buscar Empleado:", error);
+        res.status(500).send("Error interno del servidor");
+    }
+});
+
+
+
+async function buscarNombre(empleadoBuscado) {
+    try {
+        const searchResult = await buscarNombre(empleadoBuscado);
+        return searchResult;
+    } catch (error) {
+        console.error("Error al buscar empleado:", error);
+        return null;
+    }
+}
 
 module.exports = ruta;
 

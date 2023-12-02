@@ -2,8 +2,9 @@ class Empleado{
     constructor(id, data){
         this.bandera = 0;
         this.id=id;
-        this.nombre=data.nombre;
+
         this.empleado = data.empleado;
+        this.puesto = data.puesto;
         this.password=data.password;
         this.salt=data.salt;
         this.admin=data.admin; 
@@ -14,12 +15,12 @@ class Empleado{
             id.length > 0? this._id = id:this.bandera = 1;
         }
     }
-    set nombre(nombre){
-        nombre.length>0?this._nombre=nombre:this.bandera=1;    
-        
-    }
+
     set empleado(empleado){
         empleado.length>0?this._empleado=empleado:this.bandera=1;
+    }
+    set puesto(puesto){
+        puesto.length>0?this._puesto=puesto:this.bandera=1;
     }
     set password(password){
         password.length>0?this._password=password:this.bandera=1;       
@@ -32,6 +33,7 @@ class Empleado{
     set foto(foto){
         foto.length > 0 ? this._foto = foto:this.bandera = 1; 
     }
+    
     set admin(admin){
         this._admin=admin;
      }
@@ -40,11 +42,13 @@ class Empleado{
     get id(){
         return this._id;
     }
-    get nombre(){
-        return this._nombre;
-    }
+
     get empleado(){
         return this._empleado;
+    }
+
+    get puesto(){
+        return this._puesto;
     }
     get password(){
         return this._password;
@@ -64,8 +68,9 @@ class Empleado{
         if(this._id!=null){
             return{
                 id : this.id, 
-                nombre : this.nombre,
+
                 empleado : this.empleado,
+                puesto : this.puesto,
                 password : this.password,
                 salt : this.salt,
                 foto : this.foto,
@@ -74,8 +79,9 @@ class Empleado{
         }
         else{
             return{
-                nombre : this.nombre,
+        
                 empleado : this.empleado,
+                puesto : this.puesto,
                 password : this.password,
                 salt : this.salt,
                 foto : this.foto,

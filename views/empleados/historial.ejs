@@ -1,0 +1,34 @@
+<!-- historial.ejs -->
+<%- include("../templates/encabezado.ejs") %>
+<%- include("../templates/menu.ejs") %>
+
+<div class="container">
+    <div class="card mt-5">
+        <div class="card-header">
+            <h1>Historial de Búsquedas</h1>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Empleado</th>
+                        <th>Fecha</th>
+                        <th>Término de Búsqueda</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% historial.forEach(busqueda => { %>
+                        <tr>
+                            <td><%= busqueda.empleado %></td>
+                            <td><%= busqueda.fecha %></td>
+                            <td><%= busqueda.termino_busqueda %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+</div>
+
+<%- include("../templates/pie.ejs") %>

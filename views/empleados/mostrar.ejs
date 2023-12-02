@@ -1,16 +1,16 @@
 <%- include("../templates/encabezado") %>
 <%- include("../templates/menu") %>
 <div class="container">
-    <div class="card mt-5">
-        <div class="card-header">
+    <div class="card" style="margin-top: 80px;">
+        <div class="card-header bg-dark text-white">
             <h1>Empleados</h1>
         </div>
         <div class="card-body">
-            <table class="table table-hover">
-                <thead>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="thead-dark">
                     <tr>
                         <th>Id</th>
-                        <th>Nombre</th>
+                        <th>Empleado</th>
                         <th>Puesto</th>
                         <th>Password</th>
                         <th>Foto</th>
@@ -23,13 +23,13 @@
                     %>
                     <tr>
                         <td><%= i+1 %></td>
-                        <td><%= empleado.nombre %></td>
+                        <td><%= empleado.empleado %></td>
                         <td><%= empleado.puesto %></td>
                         <td>*****</td>
-                        <td><img src="/images/<%= empleado.foto %>" width="100px" alt=""></td>
+                        <td><img src="/images/<%= empleado.foto %>" class="img-thumbnail"  width="100px" alt=""></td>
                         <td>
-                            <a href="/editarEmpleado/<%= empleado.id %>">Editar</a>
-                            <a href="/borrarEmpleado/<%= empleado.id %>">Borrar</a>
+                            <a href="/editar/<%= empleado.id %>"  class="btn btn-warning btn-sm">Editar</a>
+                            <a href="/borrar/<%= empleado.id %>" class="btn btn-danger btn-sm" >Borrar</a>
                         </td>
                     </tr>
                     <%

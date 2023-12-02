@@ -10,6 +10,7 @@ function subirArchivo(){
     return multer({storage}).single('foto');
 }
 
+
 module.exports={
     subirArchivo
 }

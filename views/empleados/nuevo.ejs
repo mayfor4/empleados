@@ -1,19 +1,20 @@
 <%- include("../templates/encabezado") %>
 <%- include("../templates/menu") %>
-<div class="container mt-5">
-    <form action="/nuevoEmpleado" method="post" enctype="multipart/form-data">
-        <div class="card">
-            <div class="card-header">
+<div class="container">
+    <div class="card" style="margin-top: 60px;"></div>
+    <form action="/nuevoempleado" method="post" enctype="multipart/form-data">
+        <div class="card mt-5">
+            <div class="card-header bg-dark text-white">
                 <h1>NUEVO EMPLEADO</h1>
             </div>
             <div class="card-body">
-                <input class="form-control mb-3" type="text" name="nombre" id="nombre" placeholder="Nombre" autofocus>
+                <input class="form-control mb-3" type="empleado" name="empleado" id="empleado" placeholder="Empleado" autofocus>
                 <input class="form-control mb-3" type="text" name="puesto" id="puesto" placeholder="Puesto">
                 <input class="form-control mb-3" type="password" name="password" id="password" placeholder="Password">
                 <input class="form-control mb-3" type="file" name="foto" id="foto">
             </div>
             <div class="card-footer">
-                <button type="submit" class="form-control btn btn-primary">Guardar Empleado</button>
+                <button  class="form-control btn btn-dark" type="submit">Guardar Empleado</button>
             </div>
         </div>
     </form>

@@ -2,7 +2,7 @@ var conexion = require("./conexion").conexionEmpleados;
 var Empleado = require("../modelos/Empleado");
 var {generarPassword, validarPassword}=require("../middlewares/passwords");
 
-async function mostrarEmpleados(){
+/*async function mostrarEmpleados(){
     var employees = [];
     try {
         var empleados = await conexion.get();
@@ -18,6 +18,29 @@ async function mostrarEmpleados(){
     }
     return employees;
 }
+*/
+async function mostrarEmpleados() {
+    var employees = [];
+    try {
+        var empleados= await conexion.get();
+        //console.log("Datos obtenidos de la base de datos:", empleadosSnapshot);
+        if (!empleados.empty) {
+            empleados.forEach(empleadoDoc => {  
+                var empleado1 = new Empleado(empleadoDoc.id, empleadoDoc.data());
+                if (empleado1.bandera === 0) {
+                    employees.push(empleado1.obtenerEmpleado);
+                }
+            });
+        } else {
+            console.log("No se encontraron empleados");
+        }
+    } catch (err) {
+        console.log("Error al mostrar empleados " + err);
+        employees = [];
+    }
+    return employees;
+}
+
 
 async function buscarPorId(id) {
     var employee;
@@ -58,7 +81,7 @@ async function login(datos) {
     var empleadoObjeto;
 
     try {
-        var empleados = await conexion.where('usuario', '==', datos.usuario).get();
+        var empleados = await conexion.where('empleado', '==', datos.empleado).get();
 
         if (empleados.docs.length === 0) {
             console.log("No existe el empleado");
@@ -83,7 +106,7 @@ async function login(datos) {
     return employee;
 }
 
-async function modificarEmpleado(datos) {
+async function modificarEmpleado(datos){
     var error = 1;
     var employee = await buscarPorId(datos.id);
     if (employee != undefined) {
@@ -126,11 +149,33 @@ async function borrarEmpleado(id) {
     return error;
 }
 
+///buscar empleado
+
+async function buscarNombre(empleado) {
+    try {
+        console.log(empleado);
+        const snapshot = await conexion.where("empleado", "==", empleado).get();
+        if (snapshot.size > 0) {
+            const empleado = snapshot.docs[0].data();
+            return {
+                id: snapshot.docs[0].id,
+                nombre: empleado.nombre,
+                empleado: empleado.empleado,
+                password: empleado.password
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error("Error al buscar empleado por nombre", error);
+        return null;
+    }
+}
 module.exports = {
     mostrarEmpleados,
     buscarPorId,
     nuevoEmpleado,
     modificarEmpleado,
     borrarEmpleado,
-    login
+    login,
+    buscarNombre
 };

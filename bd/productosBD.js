@@ -87,10 +87,32 @@ async function borrarProducto(id){
 
 }
 
+async function buscarProducto(nombre) {
+    try {
+        console.log(nombre);
+        const snapshot = await conexion.where("nombre", "==", nombre).get();
+        if (snapshot.size > 0) {
+            const producto = snapshot.docs[0].data();
+            return {
+                id: snapshot.docs[0].id,
+                nombre: producto.nombre,
+                marca: producto.marca,
+                modelo: producto.modelo
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error("Error al buscar producto por nombre", error);
+        return null;
+    }
+}
+
+
 module.exports={
     mostrarPro,
     nuevoPro,
     buscarPorId,
     modificarProducto,
-    borrarProducto
+    borrarProducto,
+    buscarProducto
 }
