@@ -4,19 +4,41 @@ var fs = require("fs");
 const path = require("path");
 var {borrarProducto,buscarPorId,modificarProducto,mostrarPro,nuevoPro, buscarProducto}=require("../bd/productosBD");
 
-ruta.get("/mostrarPro",async(req,res)=>{ // /////////////////
+// Middleware para verificar si el usuario ha iniciado sesión
+function requireLogin(req, res, next) {
+    if (req.session && (req.session.admin || req.session.empleado)) {
+        // Si el usuario ha iniciado sesión, permite el acceso a la siguiente ruta
+        return next();
+    } else {
+        // Si el usuario no ha iniciado sesión, redirige a la página de inicio de sesión
+        res.redirect("/login");
+    }
+}
+
+// Middleware para verificar si el usuario ha iniciado sesión o se ha registrado
+function requireLoginOrRegister(req, res, next) {
+    if (req.session && (req.session.admin || req.session.empleado)) {
+        // Si el usuario ha iniciado sesión, permite el acceso a la siguiente ruta
+        return next();
+    } else {
+        // Si el usuario no ha iniciado sesión, redirige a la página de registro
+        res.redirect("/registro"); // Asegúrate de tener una ruta de registro definida en tu aplicación
+    }
+}
+
+ruta.get("/mostrarPro",requireLogin,async(req,res)=>{ // /////////////////
     var products = await mostrarPro(); 
    // console.log(users);
    // res.end(); 
     res.render("productos/mostrarPro",{products})
 }); 
 
-ruta.get("/nuevoPro",(req,res)=>{
+ruta.get("/nuevoPro",requireLogin,(req,res)=>{
     res.render("productos/nuevoPro");
 }); 
 
 
-ruta.post("/nuevoPro",subirArchivo(),async(req,res)=>{
+ruta.post("/nuevoPro",requireLogin,subirArchivo(),async(req,res)=>{
     req.body.foto=req.file.originalname;
    var error = await nuevoPro(req.body);
    res.redirect("/mostrarPro");
@@ -29,22 +51,15 @@ ruta.get("/editarProducto/:id", async(req,res)=>{
     res.render("productos/modificarPro",{products});
 })
 
-ruta.post("/editarProducto", async (req,res)=>{
-   // var error = await modificarProducto(req.body);
-    //res.redirect("/mostrarProductos");
-
-    try {
-        var rutaImagen = path.join(__dirname, "..", "web", "images",req.body.foto);
-        if (fs.existsSync(rutaImagen)) {
-            fs.unlinkSync(rutaImagen);
-            req.body.foto= req.file.originalname;
-            var error=await modificarProducto(req.body);
-        }
-        res.redirect("/");
-    } catch (error) {
-        console.error("Error al editar producto:", error);
+ruta.post("/editarProducto", subirArchivo(), async (req, res) => {
+    if (req.file != undefined) {
+        req.body.foto = req.file.originalname;
+    } 
+    else {
+        req.body.foto = req.body.fotoVieja;
     }
-
+    var error = await modificarProducto(req.body);
+    res.redirect("/");
 });
 
 

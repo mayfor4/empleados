@@ -3,13 +3,31 @@ var path = require("path");
 var fs = require("fs");
 var subirArchivo = require("../middlewares/middlewares").subirArchivo;
 var {empleado, admin} =require("../middlewares/passwords");
-var {mostrarEmpleados, nuevoEmpleado, buscarPorId, modificarEmpleado, borrarEmpleado, login,buscarNombre} = require("../bd/empleadosBD");
+var {mostrarEmpleados, nuevoEmpleado, buscarPorId, modificarEmpleado, borrarEmpleado, login,buscarNombre,} = require("../bd/empleadosBD");
+
+function requireLogin(req, res, next) {
+    if (req.session && req.session.empleado) {
+        return next();
+    } else {
+        res.redirect("/login?returnTo=" + req.originalUrl);
+    }
+}
+
+// Middleware para verificar si el usuario ha iniciado sesión y tiene el puesto de admin
+function requireLoginAndAdmin(req, res, next) {
+    if (req.session && req.session.empleado && req.session.admin) {
+        return next();
+    } else {
+        res.redirect("/login?returnTo=" + req.originalUrl);
+    }
+}
+
 
 ruta.get("/login", (req, res) => {
     res.render("empleados/login");
 });
 
-ruta.post("/login", async (req, res) => {
+/*ruta.post("/login", async (req, res) => {
     var employee = await login(req.body);
     if (employee == undefined) {
         res.redirect("/login");
@@ -26,14 +44,25 @@ ruta.post("/login", async (req, res) => {
             res.redirect("/");
         }
     }
+});*/
+ruta.post("/login", async (req, res) => {
+    var employee = await login(req.body);
+    if (employee == undefined) {
+        res.redirect("/login");
+    } else {
+        req.session.empleado = true;
+        req.session.admin = employee.admin;
+        res.redirect("/");
+    }
 });
+
 
 ruta.get("/logout",(req, res)=>{
     req.session=null;
     res.redirect("/login");
 })
 
-ruta.get("/", async (req, res) => {
+ruta.get("/", requireLogin,async (req, res) => {
     var employees = await mostrarEmpleados();
     res.render("empleados/mostrar", {employees});
 });
