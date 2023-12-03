@@ -15,6 +15,7 @@
                 <input class="form-control mb-3" value="<%= products.modelo %>" type="text" name="modelo" id="modelo" placeholder="Modelo">
                 <input class="form-control mb-3" value="<%= products.anio %>" type="text" name="anio" id="anio" placeholder="Año">
                 <input class="form-control mb-3" type="file" name="foto" id="foto">
+                <input type="hidden" name="fotoVieja" id="fotoVieja" value="<%=products.foto %>">
             </div>
             <div class="card-footer">
                 <button class="btn btn-success form-control">Guardar Cambios</button>

@@ -2,6 +2,7 @@ var ruta=require("express").Router();
 var subirArchivo=require("../middlewares/middlewares").subirArchivo;
 var fs = require("fs");
 const path = require("path");
+var {empleado, admin} =require("../middlewares/passwords");
 var {borrarProducto,buscarPorId,modificarProducto,mostrarPro,nuevoPro, buscarProducto}=require("../bd/productosBD");
 
 // Middleware para verificar si el usuario ha iniciado sesión
