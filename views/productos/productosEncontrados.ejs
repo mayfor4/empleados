@@ -14,6 +14,10 @@
                         <th>Nombre</th>
                         <th>Marca</th>
                         <th>Modelo</th>
+                        <th>Año</th>
+                        <th>Precio</th>
+                        <th>Categoria</th>
+                        <th>Foto</th>
                         <!-- Agrega cualquier otro encabezado necesario -->
                     </tr>
                 </thead>
@@ -25,6 +29,10 @@
                            
                             <td><%= searchResult.marca %></td>
                             <td><%= searchResult.modelo %></td>
+                            <td><%= searchResult.anio %></td>
+                            <td>$<%= searchResult.precio %></td>
+                            <td><%= searchResult.categoria %></td>
+                            <td><img src="/images/<%= searchResult.foto %>" class="img-thumbnail" width="100px"></td>
                             
                             <!-- Agrega cualquier otro dato necesario -->
                         </tr>

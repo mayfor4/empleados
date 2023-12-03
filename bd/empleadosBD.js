@@ -159,8 +159,8 @@ async function buscarNombre(empleado) {
             const empleado = snapshot.docs[0].data();
             return {
                 id: snapshot.docs[0].id,
-                nombre: empleado.nombre,
                 empleado: empleado.empleado,
+                puesto: empleado.puesto,
                 password: empleado.password
             };
         }

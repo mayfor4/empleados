@@ -97,7 +97,11 @@ async function buscarProducto(nombre) {
                 id: snapshot.docs[0].id,
                 nombre: producto.nombre,
                 marca: producto.marca,
-                modelo: producto.modelo
+                modelo: producto.modelo,
+                anio: producto.anio,
+                precio:producto.precio,
+                categoria:producto.categoria,
+                foto:producto.foto
             };
         }
         return null;

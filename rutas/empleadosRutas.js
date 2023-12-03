@@ -11,12 +11,14 @@ function requireLogin(req, res, next) {
     } else {
         res.redirect("/login?returnTo=" + req.originalUrl);
     }
-}
+} 
 
 // Middleware para verificar si el usuario ha iniciado sesión y tiene el puesto de admin
 function requireLoginAndAdmin(req, res, next) {
     if (req.session && req.session.empleado && req.session.admin) {
         return next();
+    } else if (req.session && req.session.empleado && !req.session.admin) {
+        return res.send("Acceso denegado. No tienes permiso para acceder a esta página."); // O redirige a otra página existente con un mensaje similar
     } else {
         res.redirect("/login?returnTo=" + req.originalUrl);
     }
@@ -77,25 +79,35 @@ ruta.post("/nuevoEmpleado", subirArchivo(), async (req, res) => {
     res.redirect("/");
 });
 
-ruta.get("/editar/:id", async (req, res) => {
+ruta.get("/editar/:id", requireLoginAndAdmin, async (req, res) => {
     var employee = await buscarPorId(req.params.id);
-    res.render('empleados/modificar', {employee});
+    if (req.session.admin) {
+        res.render('empleados/modificar', { employee });
+    } else {
+        res.send("No tienes permiso para acceder a esta página");
+    }
 });
 
+ruta.post("/editar", requireLoginAndAdmin, subirArchivo(), async (req, res) => {
+    if (!req.session.admin) {
+        return res.send("No tienes permiso para realizar esta acción");
+    }
 
-ruta.post("/editar", subirArchivo(), async (req, res) => {
     if (req.file != undefined) {
         req.body.foto = req.file.originalname;
-    } 
-    else {
+    } else {
         req.body.foto = req.body.fotoVieja;
     }
     var error = await modificarEmpleado(req.body);
     res.redirect("/");
 });
 
-ruta.get("/borrar/:id", async (req, res) => {
+ruta.get("/borrar/:id", requireLoginAndAdmin, async (req, res) => {
     try {
+        if (!req.session.admin) {
+            return res.send("No tienes permiso para realizar esta acción");
+        }
+
         var employee = await buscarPorId(req.params.id);
         if (employee) {
             var rutaImagen = path.join(__dirname, "..", "web", "images", employee.foto);
@@ -109,7 +121,6 @@ ruta.get("/borrar/:id", async (req, res) => {
         console.error("Error al borrar empleado:", error);
     }
 });
-
 /*ruta.get("/borrar/:id", async(req,res)=>{
     await borrarEmpleado(req.params.id);
     res.redirect("/");
@@ -119,7 +130,7 @@ ruta.get("/borrar/:id", async (req, res) => {
 
 
 ////////////////////////////////////////////empleados buscar
-ruta.get("/buscarEmpleado", async (req, res) => {
+ruta.get("/buscarEmpleado", requireLoginAndAdmin,async (req, res) => {
     try {
         const empleado= req.body.empleado;
         const searchResult = await buscarNombre(empleado);
@@ -135,7 +146,7 @@ ruta.get("/buscarEmpleado", async (req, res) => {
     }
 });
 
-ruta.post("/buscarEmpleado", async (req, res) => {
+ruta.post("/buscarEmpleado", requireLoginAndAdmin,async (req, res) => {
     try {
         const empleado = req.body.empleado;  // Utiliza req.body en lugar de req.query
         const searchResult = await buscarNombre(empleado);

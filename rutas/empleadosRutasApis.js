@@ -2,6 +2,8 @@ var ruta = require("express").Router();
 var { mostrarEmpleados, nuevoEmpleado, buscarPorId, modificarEmpleado, borrarEmpleado } = require("../bd/empleadosBD");
 const Empleado = require("../modelos/Empleado");
 
+
+
 ruta.get("/api/", async (req, res) => {
     var empleados = await mostrarEmpleados();
     if (empleados.length > 0) {

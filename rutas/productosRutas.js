@@ -17,16 +17,15 @@ function requireLogin(req, res, next) {
 }
 
 // Middleware para verificar si el usuario ha iniciado sesión o se ha registrado
-function requireLoginOrRegister(req, res, next) {
-    if (req.session && (req.session.admin || req.session.empleado)) {
-        // Si el usuario ha iniciado sesión, permite el acceso a la siguiente ruta
+function requireLoginAndAdmin(req, res, next) {
+    if (req.session && req.session.empleado && req.session.admin) {
         return next();
+    } else if (req.session && req.session.empleado && !req.session.admin) {
+        return res.send("Acceso denegado. No tienes permiso para acceder a esta página."); // O redirige a otra página existente con un mensaje similar
     } else {
-        // Si el usuario no ha iniciado sesión, redirige a la página de registro
-        res.redirect("/registro"); // Asegúrate de tener una ruta de registro definida en tu aplicación
+        res.redirect("/login?returnTo=" + req.originalUrl);
     }
 }
-
 ruta.get("/mostrarPro",requireLogin,async(req,res)=>{ // /////////////////
     var products = await mostrarPro(); 
    // console.log(users);
@@ -46,13 +45,13 @@ ruta.post("/nuevoPro",requireLogin,subirArchivo(),async(req,res)=>{
    return error;
 })
 
-ruta.get("/editarProducto/:id", async(req,res)=>{
+ruta.get("/editarProducto/:id", requireLoginAndAdmin,async(req,res)=>{
     var products = await buscarPorId(req.params.id);
     //res.end();
     res.render("productos/modificarPro",{products});
 })
 
-ruta.post("/editarProducto", subirArchivo(), async (req, res) => {
+ruta.post("/editarProducto", requireLoginAndAdmin, subirArchivo(), async (req, res) => {
     if (req.file != undefined) {
         req.body.foto = req.file.originalname;
     } 
@@ -65,7 +64,7 @@ ruta.post("/editarProducto", subirArchivo(), async (req, res) => {
 
 
 
-ruta.get("/borrarProducto/:id",async(req,res)=>{
+ruta.get("/borrarProducto/:id",requireLoginAndAdmin,async(req,res)=>{
     //await borrarProducto(req.params.id);
     //res.redirect("/mostrarProductos");
     try{
