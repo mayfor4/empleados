@@ -13,32 +13,32 @@ class Producto {
 
     set id(id) {
         if (id != null) {
-            id.length > 0 ? (this._id = id) : (this.bandera = 1);
+            id.length > 0 ? this._id = id : (this.bandera = 1);
         }
     }
 
     set nombre(nombre) {
-        nombre.length > 0 ? (this._nombre = nombre) : (this.bandera = 1);
+        nombre.length > 0 ? this._nombre = nombre : (this.bandera = 1);
     }
 
     set marca(marca) {
-        marca.length > 0 ? (this._marca = marca) : (this.bandera = 1);
+        marca.length > 0 ? this._marca = marca : (this.bandera = 1);
     }
 
     set modelo(modelo) {
-        modelo.length > 0 ? (this._modelo = modelo) : (this.bandera = 1);
+        modelo.length > 0 ? this._modelo = modelo : (this.bandera = 1);
     }
 
     set anio(anio) {
-        anio.length > 0 ? (this._anio = anio) : (this.bandera = 1);
+        anio.length > 0 ? this._anio = anio : (this.bandera = 1);
     }
 
     set precio(precio) {
-        precio.length > 0 ? (this._precio = precio) : (this.bandera = 1);
+        precio.length > 0 ? this._precio = precio : (this.bandera = 1);
     }
 
     set categoria(categoria) {
-        categoria.length > 0 ? (this._categoria = categoria) : (this.bandera = 1);
+        categoria.length > 0 ? this._categoria = categoria : (this.bandera = 1);
     }
 
     set foto(foto) {
